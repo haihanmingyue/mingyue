@@ -1,6 +1,7 @@
 package com.mingyue.mingyue;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.ComponentScans;
 
 
 @SpringBootApplication(scanBasePackages = {"com.*.*.*"})
+@EnableRabbit
 //@MapperScan(basePackages = {"com.*.*.dao"})   // springboot版本问题 版本要和 mybatis能对应上
 //@ServletComponentScan(basePackages = {"com.*.*.filter"}) // springboot版本问题
 // 换成springboot 2 就可以了  javax.servlet.annotation.WebFilter;
