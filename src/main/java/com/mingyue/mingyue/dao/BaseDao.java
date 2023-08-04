@@ -7,6 +7,8 @@ public interface BaseDao<T> {
 
    void create(T bean);
 
+   void update(T bean);
+
    void batchCreate(List<T> bean);
 
    T get(String uuid);

@@ -28,6 +28,14 @@ public abstract class BaseService<T extends BaseBean,D extends BaseDao<T>>{
 
     }
 
+    @Transactional(rollbackFor = { RuntimeException.class, Exception.class })
+    public void update(T bean) {
+        bean.setId(null);
+        bean.setUpdateDate(new Date());
+        getDao().update(bean);
+
+    }
+
     public T get(String uuid) {
         return getDao().get(uuid);
     }
