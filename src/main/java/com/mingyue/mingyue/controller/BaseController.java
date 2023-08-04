@@ -1,5 +1,6 @@
 package com.mingyue.mingyue.controller;
 
+import com.mingyue.mingyue.bean.ReturnBean;
 import com.mingyue.mingyue.bean.User;
 
 
@@ -11,57 +12,49 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 
-public class BaseController extends AuthorizingRealm {
+public class BaseController implements HttpRequestHandler {
 
     public Logger logger = Logger.getLogger(this.getClass());
-
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        Object o = principalCollection.getPrimaryPrincipal();
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-
-        logger.warn("shiro：  "  + o.toString());
-// 放入角色信息
-
-// 放入权限信息
-        return authorizationInfo;
-    }
-
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        User user = new User();
-        user.setUsername("1");
-        user.setPassword("1");
-        user.setId(1L);
-        if (user == null) {
-            throw new RuntimeException("user is error");
-        }
-        return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
-    }
 
     /**
      * 基于@ExceptionHandler的统一异常处理，返回json数据
      * 拦截spring参数验证错误
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseBody
-    public Map exp(HttpServletRequest request, HttpServletResponse response, MethodArgumentNotValidException e) {
-        String msg = "参数错误";
-        e.getBindingResult().getAllErrors();
-        if(e.getBindingResult().getAllErrors().size() > 0){
-            msg = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+    public ReturnBean exp(HttpServletRequest request, HttpServletResponse response, Exception ex) {
+        String errorMsg = "服务器内部错误，请稍后再试";
+        if (ex instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException e = (MethodArgumentNotValidException) ex;
+            List<ObjectError> list = e.getAllErrors();
+            for (ObjectError error : list) {
+                errorMsg = error.getDefaultMessage();
+                logger.error(error.getDefaultMessage());
+                break;
+            }
+        } else {
+            logger.error(ex);
         }
-        Map d = MapUtil.genMap("code", HttpStatus.INTERNAL_SERVER_ERROR,"msg", msg, "data",null,"version", 1.0);
-        return d;
+        return ReturnBean.error(errorMsg);
+    }
+
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
     }
 }

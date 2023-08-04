@@ -39,6 +39,10 @@ public class TestService implements ApplicationContextAware {
     private TestDao testDao;
 
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
+
     @Resource
     private JedisPool jedisPool;
 
@@ -203,6 +207,8 @@ public class TestService implements ApplicationContextAware {
             methodInterFaceMap.put(methodInterFace.initType(),methodInterFace);
         });
         System.err.println(methodInterFaceMap.size());
+
+
     }
 
     public void testPrint() {

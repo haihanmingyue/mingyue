@@ -5,11 +5,13 @@ import com.alibaba.fastjson2.JSON;
 import com.documents4j.api.DocumentType;
 import com.lowagie.text.DocumentException;
 import com.mingyue.mingyue.bean.ChildRenFactory3;
+import com.mingyue.mingyue.bean.UserAccount;
 import com.mingyue.mingyue.config.Config;
 import com.mingyue.mingyue.service.PdfService;
 import com.mingyue.mingyue.service.TestService;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,10 +20,18 @@ import com.mingyue.mingyue.utils.SetContentTypeUtil;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import io.netty.util.internal.StringUtil;
+import net.sf.jsqlparser.util.validation.ValidationUtil;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +45,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("hello")
-public class HellowController extends BaseController{
+public class HellowController extends BaseController {
     @Autowired
     private Configuration configuration;
 
@@ -48,80 +58,42 @@ public class HellowController extends BaseController{
     @Autowired
     private PdfService pdfService;
 
-
-    @RequestMapping("/upload")
-    @ResponseBody
-    public void hellow(HttpServletRequest request, HttpServletResponse response) throws ServletRequestBindingException, IOException {
-        // 获得文件：  FileParam fileParam = new FileParam();
-        logger.warn("xxx-> " + Config.upload);
-        String fn = "fileToUpload";
-        if (request instanceof MultipartHttpServletRequest multipartRequest) {
-            List<MultipartFile> files = multipartRequest.getFiles(fn);
-            for (MultipartFile file : files) {
-
-                File savePos = new File(Config.upload);
-                if (!savePos.exists()) {  // 不存在，则创建该文件夹
-                    savePos.mkdir();
-                }
-                String realPath = savePos.getCanonicalPath();
-                // 上传该文件/图像至该文件夹下
-                try {
-                    String fileName = file.getOriginalFilename();
-                    if (StringUtil.isNullOrEmpty(fileName))
-                        throw new RuntimeException("fileName is null");
-                    int i  = fileName.lastIndexOf(".");
-                    String UUid = UUID.randomUUID().toString();
-                    String newFileName = UUid + fileName.substring(i);
-                    System.err.println(newFileName);
-                    file.transferTo(new File(realPath + "/" + newFileName));
-
-                    logger.info("upload success");
-                    response.getWriter().println("upload success fileId-> " + UUid);
-                } catch (IOException e) { ;
-                    response.getWriter().println("upload failed");
-                    logger.warn("error->", e);
-                    throw e;
-                }
-            }
-        }
-    }
-
-    @RequestMapping("/download")
-    public void getP(HttpServletRequest request, HttpServletResponse response) throws ServletRequestBindingException, IOException {
-       String name = ServletRequestUtils.getStringParameter(request,"uuid");
-       String type = ServletRequestUtils.getStringParameter(request,"type");
-       String open = ServletRequestUtils.getStringParameter(request,"open");
-
-       if(open == null) {
-           open = "inline";
-       } else {
-           if (!open.equals("inline") && !open.equals("attachment")) {
-               open = "inline";
-           }
-       }
-       File file = new File(Config.upload + "/" + name + "." + type);
-       String fileName = file.getName();
-
-
-        response.setContentType(SetContentTypeUtil.map.get(type));
-
-        response.addHeader("Content-Length", "" + file.length());
-        response.setHeader("Content-Disposition", open +";fileName="+ fileName);//在线查看
-//        response.setHeader("Content-Disposition", "attachment;fileName="+ fileName);//下载
-
-       logger.warn("fileName->" + fileName);
-       byte[] bytes = new byte[1024];
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            OutputStream outputStream = response.getOutputStream();
-            int len;
-            while ((len = fileInputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, len);
-            }
-        } catch (Exception e) {
-            logger.error("error->", e);
-            throw e;
-        }
-    }
+//    @RequestMapping("/upload")
+//    @ResponseBody
+//    public void hellow(HttpServletRequest request, HttpServletResponse response) throws ServletRequestBindingException, IOException {
+//        // 获得文件：  FileParam fileParam = new FileParam();
+//        logger.warn("xxx-> " + Config.upload);
+//        String fn = "fileToUpload";
+//        if (request instanceof MultipartHttpServletRequest multipartRequest) {
+//            List<MultipartFile> files = multipartRequest.getFiles(fn);
+//            for (MultipartFile file : files) {
+//
+//                File savePos = new File(Config.upload);
+//                if (!savePos.exists()) {  // 不存在，则创建该文件夹
+//                    savePos.mkdir();
+//                }
+//                String realPath = savePos.getCanonicalPath();
+//                // 上传该文件/图像至该文件夹下
+//                try {
+//                    String fileName = file.getOriginalFilename();
+//                    if (StringUtil.isNullOrEmpty(fileName))
+//                        throw new RuntimeException("fileName is null");
+//                    int i  = fileName.lastIndexOf(".");
+//                    String UUid = UUID.randomUUID().toString();
+//                    String newFileName = UUid + fileName.substring(i);
+//                    System.err.println(newFileName);
+//                    file.transferTo(new File(realPath + "/" + newFileName));
+//
+//                    logger.info("upload success");
+//                    response.getWriter().println("upload success fileId-> " + UUid);
+//                } catch (IOException e) { ;
+//                    response.getWriter().println("upload failed");
+//                    logger.warn("error->", e);
+//                    throw e;
+//                }
+//            }
+//        }
+//    }
 
 
     @RequestMapping("/insert")
@@ -182,6 +154,7 @@ public class HellowController extends BaseController{
             Integer offset = page * rows;
 
             Jedis jedis = jedisPool.getResource();
+
             Map map = new HashMap();
             Set<String> strings = jedis.zrevrangeByScore(
                     "useraccount", // list的key
@@ -282,6 +255,21 @@ public class HellowController extends BaseController{
         String k = testService.method(ServletRequestUtils.getStringParameter(request,"method"));
         return k;
     }
+
+
+
+    @RequestMapping("/test")
+//    @loggerInter(setClass = UserAccount.class)
+    @ResponseBody
+    public String test(HttpServletRequest request, HttpServletResponse response, @RequestBody(required = false) UserAccount userAccount) throws ServletRequestBindingException {
+        String s = ServletRequestUtils.getStringParameter(request,"key");
+
+
+        return s+ "烦恼会" + userAccount.getUuid();
+
+    }
+
+
 //12 34 56    56 34 12
 
 
@@ -343,5 +331,55 @@ public class HellowController extends BaseController{
     }
 
 
+    @RequestMapping("getFile")
+    @ResponseBody
+     public Map getFile(HttpServletRequest request,HttpServletResponse response) {
+
+        List<String> fileList = getFileNames(Config.upload);
+        int total = fileList == null ? 0 : fileList.size();
+
+
+        return MapUtil.genMap("code",0,"version",1.0,"data",MapUtil.genMap("rows",fileList,"total",total),"msg","success");
+     }
+
+    /**
+     * 得到文件名称
+     *
+     * @param path 路径
+     * @return {@link List}<{@link String}>
+     */
+    private static List<String> getFileNames(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+        List<String> fileNames = new ArrayList<>();
+        return getFileNames(file, fileNames);
+    }
+
+    /**
+     * 得到文件名称
+     *
+     * @param file      文件
+     * @param fileNames 文件名
+     * @return {@link List}<{@link String}>
+     */
+    private static List<String> getFileNames(File file, List<String> fileNames) {
+        if (file != null) {
+            File[] files = file.listFiles() ;
+            if (files != null) {
+                for (File f : files) {
+                    if (f.isDirectory()) { // 判断是不是文件夹
+                        getFileNames(f, fileNames);
+                    } else {
+                        fileNames.add(f.getName());
+                    }
+                }
+                return fileNames;
+            }
+            return null;
+        }
+        return null;
+    }
 
 }

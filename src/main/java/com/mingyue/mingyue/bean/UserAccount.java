@@ -1,19 +1,33 @@
 package com.mingyue.mingyue.bean;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
-public class UserAccount {
+public class UserAccount extends BaseBean {
 
     private Long id;
     private String uuid;
+
+    @NotBlank(message = "userName is not null")
     private String userName;
+    @NotBlank(message = "passWord is not null")
     private String passWord;
+
+    private String salt;
     private Short deleteStatus;
     private Short status;
     private Date createdDate;
     private String createdBy;
     private Date updateDate;
     private String updateBy;
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 
     public Long getId() {
         return id;

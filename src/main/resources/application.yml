@@ -12,7 +12,7 @@ spring:
       max-file-size: 9999MB
       max-request-size: 9999MB
   datasource:
-    url: jdbc:mysql://192.168.31.193:3306/mingyue?serverTimezone=GMT%2B8
+    url: jdbc:mysql://127.0.0.1:3306/mingyue?serverTimezone=GMT%2B8
     username: root
     password: as521968
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -48,8 +48,8 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.*.*.dao
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 pagehelper:
@@ -64,8 +64,8 @@ logging:
 
 file:
   upload:
-#    path: /mnt/mingyue/upload
-   path: src/main/resources/upload
+    path: /home/mingyue/upload
+#   path: src/main/resources/upload
 
 config:
   addservice: true

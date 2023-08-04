@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Controller
 @RequestMapping("send")
@@ -49,7 +52,6 @@ public class SendMsgController extends BaseController {
 //    CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
             rabbitTemplate.convertAndSend("xxTopicExchange", key, msg);
 //    rabbitTemplate.convertAndSend(RabbitmqConfig.ITEM_TOPIC_EXCHANGE,key,msg,correlationData); 为单个消息单独设置过期时间
-
 
         } catch (Exception e) {
             logger.warn("error->", e);
@@ -126,9 +128,8 @@ public class SendMsgController extends BaseController {
 
         Message o;
         do {
-           o = (Message) rabbitTemplate.receiveAndConvert(RabbitmqConfig.ITEM_QUEUE);
-           System.out.println("消费->" + o);
-           Thread.sleep(500);
+           o = (Message) rabbitTemplate.receive(RabbitmqConfig.ITEM_QUEUE);
+
         } while (o != null);
 
         return "success";
