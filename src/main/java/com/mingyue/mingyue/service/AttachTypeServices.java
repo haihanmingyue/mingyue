@@ -38,6 +38,7 @@ public class AttachTypeServices extends BaseService<AttachType, AttachTypeDao>{
         if (StringUtils.hasText(attachType.getUuid())) {
             update(attachType);
         } else {
+            attachType.setUuid(UUID.randomUUID().toString());
             create(attachType);
         }
     }

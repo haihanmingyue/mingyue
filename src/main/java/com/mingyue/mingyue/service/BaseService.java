@@ -4,12 +4,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mingyue.mingyue.bean.BaseBean;
 import com.mingyue.mingyue.dao.BaseDao;
+import io.netty.util.internal.StringUtil;
 import org.apache.log4j.Logger;
+import org.apache.shiro.util.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class BaseService<T extends BaseBean,D extends BaseDao<T>>{
 
@@ -24,6 +27,9 @@ public abstract class BaseService<T extends BaseBean,D extends BaseDao<T>>{
         bean.setUpdateDate(new Date());
         bean.setStatus((short)1);
         bean.setDeleteStatus((short)0);
+        if (!StringUtils.hasText(bean.getUuid())) {
+            bean.setUuid(UUID.randomUUID().toString());
+        }
         getDao().create(bean);
 
     }

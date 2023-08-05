@@ -1,11 +1,15 @@
 package com.mingyue.mingyue.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mingyue.mingyue.bean.AttachBean;
+import com.mingyue.mingyue.bean.AttachSubType;
 import com.mingyue.mingyue.bean.ReturnBean;
 import com.mingyue.mingyue.bean.UserAccount;
 import com.mingyue.mingyue.config.Config;
 import com.mingyue.mingyue.service.AttachServices;
 import com.mingyue.mingyue.service.UserAccountServices;
+import com.mingyue.mingyue.utils.MapUtil;
 import com.mingyue.mingyue.utils.SetContentTypeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -36,7 +42,7 @@ public class AttachController extends BaseController{
 
     @RequestMapping("/upload")
     @ResponseBody
-    public ReturnBean upload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ReturnBean upload(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
         return attachServices.upload(request,response);
     }
 
@@ -190,6 +196,28 @@ public class AttachController extends BaseController{
             }
         }
 
+    }
+
+
+
+    @RequestMapping("/list")
+    @ResponseBody
+    public ReturnBean list(HttpServletRequest request) {
+        Map<String,String> map = MapUtil.getRequestParamsMap(request);
+        PageHelper.startPage(1,999);
+        List<AttachBean> list =  attachServices.findByWhere(map);
+        PageInfo pageInfo = new PageInfo(list);
+        return ReturnBean.ok("查询成功").setData("success").setData(MapUtil.genMap("rows",pageInfo.getList(),"total",pageInfo.getTotal()));
+    }
+
+    @RequestMapping("/findBySubType")
+    @ResponseBody
+    public ReturnBean findBySubType(HttpServletRequest request) {
+        Map<String,String> map = MapUtil.getRequestParamsMap(request);
+        PageHelper.startPage(1,999);
+        List<AttachBean> list =  attachServices.findBySubType(map);
+        PageInfo pageInfo = new PageInfo(list);
+        return ReturnBean.ok("查询成功").setData("success").setData(MapUtil.genMap("rows",pageInfo.getList(),"total",pageInfo.getTotal()));
     }
 
 }

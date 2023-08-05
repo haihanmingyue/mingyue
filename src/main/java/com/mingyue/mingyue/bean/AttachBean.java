@@ -7,6 +7,25 @@ public class AttachBean extends BaseBean{
     private String uuid;
     private String type;
 
+    private String attachSubType;
+    private String attachType;
+
+    public String getAttachSubType() {
+        return attachSubType;
+    }
+
+    public void setAttachSubType(String attachSubType) {
+        this.attachSubType = attachSubType;
+    }
+
+    public String getAttachType() {
+        return attachType;
+    }
+
+    public void setAttachType(String attachType) {
+        this.attachType = attachType;
+    }
+
     public String getPath() {
         return path;
     }

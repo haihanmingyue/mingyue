@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.documents4j.api.DocumentType;
 import com.lowagie.text.DocumentException;
 import com.mingyue.mingyue.bean.ChildRenFactory3;
+import com.mingyue.mingyue.bean.ReturnBean;
 import com.mingyue.mingyue.bean.UserAccount;
 import com.mingyue.mingyue.config.Config;
 import com.mingyue.mingyue.service.PdfService;
@@ -15,6 +16,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mingyue.mingyue.service.UserAccountServices;
 import com.mingyue.mingyue.utils.MapUtil;
 import com.mingyue.mingyue.utils.SetContentTypeUtil;
 import freemarker.template.Configuration;
@@ -23,6 +25,7 @@ import io.netty.util.internal.StringUtil;
 import net.sf.jsqlparser.util.validation.ValidationUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpHeaders;
@@ -43,11 +46,18 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ *
+ * 测试一些方法用
+ * */
 @Controller
 @RequestMapping("hello")
 public class HellowController extends BaseController {
     @Autowired
     private Configuration configuration;
+
+    @Autowired
+    private UserAccountServices userAccountServices;
 
     @Autowired
     private TestService testService;
@@ -94,6 +104,34 @@ public class HellowController extends BaseController {
 //            }
 //        }
 //    }
+
+
+    @RequestMapping("/login")
+    @ResponseBody
+    public ReturnBean login(HttpServletRequest request) throws ServletRequestBindingException {
+        String username = ServletRequestUtils.getRequiredStringParameter(request,"username");
+        String password = ServletRequestUtils.getRequiredStringParameter(request,"password");
+
+//        UserAccount userAccount = userAccountServices.findByUsername(username);
+//        if (userAccount == null) {
+//            System.err.println("1");
+//            System.err.println("1");
+//            throw new RuntimeException("账号不存在");
+//        } else {
+//            System.err.println(2);
+//        }
+
+
+
+        return ReturnBean.ok("登录成功");
+    }
+
+    @RequestMapping("/hello")
+    @ResponseBody
+    public void hello(HttpServletRequest request,HttpServletResponse response) throws ServletRequestBindingException, IOException {
+        response.getWriter().write("你好");
+    }
+
 
 
     @RequestMapping("/insert")

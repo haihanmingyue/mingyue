@@ -34,4 +34,8 @@ public class UserAccountServices extends BaseService<UserAccount,UserAccountDao>
         account.setUuid(UUID.randomUUID().toString());
         create(account);
     }
+
+    public UserAccount findByUsername(String username){
+        return getDao().findByUsername(username);
+    }
 }

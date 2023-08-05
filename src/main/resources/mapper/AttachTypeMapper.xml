@@ -31,7 +31,8 @@
         #{createdDate},
         #{createdBy},
         #{updateDate},
-        #{updateBy}
+        #{updateBy},
+        #{pictureUuid}
         )
 
     </insert>
@@ -45,7 +46,8 @@
 		created_by as createdBy,
 		updated_by as updatedBy,
 		updated_date as updatedDate,
-		created_date as createdDate
+		created_date as createdDate,
+        picture_uuid as pictureUuid
     </sql>
 
     <sql id="attachInsertFields">
@@ -57,7 +59,8 @@
         created_date,
         created_by,
         updated_date,
-        updated_by
+        updated_by,
+picture_uuid
     </sql>
 
     <sql id="whereClause">
@@ -113,9 +116,11 @@
             delete_status = #{deleteStatus},
         </if>
         <if test="status != null">
-            status = #{status}
+            status = #{status},
         </if>
-
+        <if test="pictureUuid != null">
+            picture_uuid = #{pictureUuid}
+        </if>
     </sql>
 
     <insert id="batchCreate" parameterType="list">
@@ -131,7 +136,9 @@
             #{item.createdDate},
             #{item.createdBy},
             #{item.updateDate},
-            #{item.updateBy}
+            #{item.updateBy},
+
+            #{item.pictureUuid}
 
             )
         </foreach>

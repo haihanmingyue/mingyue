@@ -6,7 +6,7 @@
 
 
     <select id="findByUsername" parameterType="String" resultType="com.mingyue.mingyue.bean.UserAccount">
-        select id,username,password,salt
+        select uuid,user_name,pass_word,salt
         from user_account
         where user_name = #{username}
     </select>

@@ -47,7 +47,13 @@ public class BaseController implements HttpRequestHandler {
                 logger.error(error.getDefaultMessage());
                 break;
             }
-        } else {
+        }
+        else if (ex instanceof RuntimeException) {
+            RuntimeException e = (RuntimeException) ex;
+            logger.error(e.getMessage());
+            errorMsg = e.getMessage();
+        }
+        else {
             logger.error(ex);
         }
         return ReturnBean.error(errorMsg);

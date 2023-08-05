@@ -6,9 +6,11 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONReader;
 import com.alibaba.fastjson2.reader.ObjectReader;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class MapUtil {
     public static Map<String,Object> genMap(Object ...keysAndValues) {
@@ -38,5 +40,17 @@ public class MapUtil {
             map.put(key,jsonObject.getString(key));
         }
         return map;
+    }
+
+    public static Map<String,String> getRequestParamsMap(HttpServletRequest request){
+        Set<String> keysSet = request.getParameterMap().keySet();
+        Map<String,String> params = new HashMap<>();
+        for(String key : keysSet) {
+            String value = request.getParameter(key);
+            if (value != null && value.length() == 0)//排除空串
+                continue;
+            params.put(key, value);
+        }
+        return params;
     }
 }

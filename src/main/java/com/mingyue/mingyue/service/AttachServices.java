@@ -13,6 +13,8 @@ import org.apache.shiro.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -37,10 +40,11 @@ public class AttachServices extends BaseService<AttachBean,AttachDao>{
 
 
     @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
-    public ReturnBean upload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ReturnBean upload(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletRequestBindingException {
         // 获得文件：  FileParam fileParam = new FileParam();
 //        logger.warn("xxx-> " + Config.upload);
         String fn = "fileToUpload";
+        String subType = ServletRequestUtils.getStringParameter(request,"subType");
         AttachBean attachBean = null;
         if (request instanceof MultipartHttpServletRequest multipartRequest) {
             List<MultipartFile> files = multipartRequest.getFiles(fn);
@@ -69,7 +73,7 @@ public class AttachServices extends BaseService<AttachBean,AttachDao>{
                     attachBean.setUuid(UUid);
                     attachBean.setPath(realPath);
                     attachBean.setType(type);
-
+                    attachBean.setAttachSubType(subType);
                     create(attachBean);
 
                     file.transferTo(new File(realPath + "/" + newFileName)); //存储磁盘
@@ -91,5 +95,12 @@ public class AttachServices extends BaseService<AttachBean,AttachDao>{
             return ReturnBean.ok("上传成功").setData(attachBean.getUuid());
         }
         return ReturnBean.error("上传失败");
+    }
+
+
+    public List<AttachBean> findBySubType(Map<String,?> params) {
+
+        return getDao().findBySubType(params);
+
     }
 }
