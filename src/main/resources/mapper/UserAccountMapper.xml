@@ -10,7 +10,7 @@
                user_name as userName,
                pass_word as passWord,
                salt,
-               header_pic as headerPci
+               header_pic as headerPic
         from user_account
         where user_name = #{username}
     </select>
@@ -29,7 +29,7 @@
         #{createdBy},
         #{updateDate},
         #{updateBy},
-                #{headerPci}
+                #{headerPic}
         )
 
     </insert>
@@ -47,7 +47,7 @@
         created_by,
         update_date,
         update_by,
-        #{header_pci}
+        header_pic
     </sql>
 
     <insert id="batchInsert" parameterType="list">
@@ -66,7 +66,7 @@
             #{item.createdBy},
             #{item.updateDate},
             #{item.updateBy},
-            #{item.headerPci}
+            #{item.headerPic}
 
             )
         </foreach>

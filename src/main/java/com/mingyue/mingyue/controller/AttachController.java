@@ -115,9 +115,9 @@ public class AttachController extends BaseController{
                     String[] ranges = rangeString.split("=");
                     if (ranges.length > 1) {
                         String[] rangeDatas = ranges[1].split("-");
-                        requestStart = Integer.parseInt(rangeDatas[0]);
+                        requestStart = Long.parseLong(rangeDatas[0]);
                         if (rangeDatas.length > 1) {
-                            requestEnd = Integer.parseInt(rangeDatas[1]);
+                            requestEnd = Long.parseLong(rangeDatas[1]);
                         }
                     }
                     if (requestEnd != 0 && requestEnd > requestStart) {

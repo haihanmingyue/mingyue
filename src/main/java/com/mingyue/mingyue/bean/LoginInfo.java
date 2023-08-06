@@ -15,7 +15,7 @@ public class LoginInfo {
     }
     public LoginInfo(UserAccount account, Session session) {
         if (account != null) {
-            setHeaderPic(account.getHeaderPci());
+            setHeaderPic(account.getHeaderPic());
             setUuid(account.getUuid());
             setUserName(account.getUserName());
         }
