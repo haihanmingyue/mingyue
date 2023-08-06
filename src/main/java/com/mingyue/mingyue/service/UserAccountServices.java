@@ -2,6 +2,8 @@ package com.mingyue.mingyue.service;
 
 import com.mingyue.mingyue.bean.UserAccount;
 import com.mingyue.mingyue.dao.UserAccountDao;
+import com.mingyue.mingyue.utils.Base64Util;
+import com.mingyue.mingyue.utils.RsaUtils;
 import com.mingyue.mingyue.utils.SaltUtils;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,20 @@ public class UserAccountServices extends BaseService<UserAccount,UserAccountDao>
 
 
     @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
-    public void register(UserAccount account) {
+    public synchronized void register(UserAccount account) throws Exception {
+
+        UserAccount userAccount = findByUsername(account.getUserName());
+        if ( null != userAccount ) {
+            throw new RuntimeException("账户已经存在");
+        }
+
+        String pass = account.getPassWord();
+
+        pass = new String(RsaUtils.decryptByPrivateKey(Base64Util.decode(pass),RsaUtils.RSA_PRIVATE_KEY));
+
+        logger.info("password->" + pass);
+        account.setPassWord(pass);
+
         //1.获取随机盐
         String salt = SaltUtils.getSalt(8);
         //2.将随机盐保存到数据

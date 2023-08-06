@@ -73,7 +73,7 @@ public class SendMsgController extends BaseController {
 
 
             Exchange exchange = ExchangeBuilder.topicExchange("xxTopicExchange").build();
-            System.err.println(exchange.getName());
+//            System.err.println(exchange.getName());
             Queue queue = QueueBuilder.durable("xxQueue").build();
             Binding binding = BindingBuilder.bind(queue).to(exchange).with("xx.#").noargs();
             //*         可以代替一个单词。
@@ -96,7 +96,7 @@ public class SendMsgController extends BaseController {
         try {
 
             String[] listeners = container.getQueueNames();
-            System.err.println(JSON.toJSONString(listeners));
+//            System.err.println(JSON.toJSONString(listeners));
             boolean f = true;
             for (String quename : listeners) {
                 if (quename.equals(name)) {

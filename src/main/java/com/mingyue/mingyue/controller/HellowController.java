@@ -11,34 +11,25 @@ import com.mingyue.mingyue.config.Config;
 import com.mingyue.mingyue.service.PdfService;
 import com.mingyue.mingyue.service.TestService;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mingyue.mingyue.service.UserAccountServices;
+import com.mingyue.mingyue.utils.BaseContextUtils;
+import com.mingyue.mingyue.utils.Base64Util;
 import com.mingyue.mingyue.utils.MapUtil;
-import com.mingyue.mingyue.utils.SetContentTypeUtil;
+import com.mingyue.mingyue.utils.RsaUtils;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import io.netty.util.internal.StringUtil;
-import net.sf.jsqlparser.util.validation.ValidationUtil;
-import org.springframework.beans.BeansException;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.server.Session;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.http.HttpHeaders;
+import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -108,28 +99,57 @@ public class HellowController extends BaseController {
 
     @RequestMapping("/login")
     @ResponseBody
-    public ReturnBean login(HttpServletRequest request) throws ServletRequestBindingException {
+    public ReturnBean login(HttpServletRequest request) throws Exception {
         String username = ServletRequestUtils.getRequiredStringParameter(request,"username");
         String password = ServletRequestUtils.getRequiredStringParameter(request,"password");
+        Integer rememberMe = ServletRequestUtils.getIntParameter(request,"rememberMe", 0);
 
-//        UserAccount userAccount = userAccountServices.findByUsername(username);
-//        if (userAccount == null) {
-//            System.err.println("1");
-//            System.err.println("1");
-//            throw new RuntimeException("账号不存在");
-//        } else {
-//            System.err.println(2);
-//        }
+        UserAccount userAccount = userAccountServices.findByUsername(username);
+
+        if (userAccount == null) {
+
+            throw new RuntimeException("账号不存在");
+        } else {
+
+            password = new String(RsaUtils.decryptByPrivateKey(Base64Util.decode(password),RsaUtils.RSA_PRIVATE_KEY));
+
+            Md5Hash MD5 = new Md5Hash(password,userAccount.getSalt(),1024);
+            password = MD5.toHex();
 
 
+            if (!password.equals(userAccount.getPassWord())) {
+                throw new RuntimeException("用户名或密码错误");
+            }
 
-        return ReturnBean.ok("登录成功");
+            try {
+
+
+                BaseContextUtils.login(userAccount,rememberMe);
+                Session session = BaseContextUtils.getCurrentSession();
+                //登录失败就报错
+                return ReturnBean.ok("登录成功").setData(session.getId());
+
+            }catch (Exception e) {
+                logger.error(e);
+                throw new RuntimeException("服务器内部错误，登录失败");
+            }
+
+        }
+    }
+
+
+    @RequestMapping("/loginOut")
+    @ResponseBody
+    public ReturnBean loginOut(HttpServletRequest request,HttpServletResponse response) throws ServletRequestBindingException, IOException {
+        BaseContextUtils.loginout();
+        return ReturnBean.ok("退出成功");
     }
 
     @RequestMapping("/hello")
     @ResponseBody
     public void hello(HttpServletRequest request,HttpServletResponse response) throws ServletRequestBindingException, IOException {
         response.getWriter().write("你好");
+        System.err.println(BaseContextUtils.getCurrentHumanId());
     }
 
 

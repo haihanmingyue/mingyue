@@ -48,8 +48,8 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.*.*.dao
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 pagehelper:
@@ -68,8 +68,7 @@ file:
 #   path: src/main/resources/upload
 
 config:
-  addservice: true
-  serviceName: mingyue
+
 
 jedis:
   pool:

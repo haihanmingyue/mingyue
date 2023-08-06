@@ -212,7 +212,7 @@ public class TestService implements ApplicationContextAware {
     }
 
     public void testPrint() {
-        System.err.println("112233");
+
     }
 
      /**

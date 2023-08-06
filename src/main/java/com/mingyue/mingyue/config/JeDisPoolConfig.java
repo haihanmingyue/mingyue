@@ -30,7 +30,7 @@ public class JeDisPoolConfig {
             return new JedisPool(config,jedisProperties.getHost(),jedisProperties.getPort(),
                     jedisProperties.getTimeout(),jedisProperties.getPassword());
         }
-        System.err.println("rerurn");
+
         return new JedisPool(config,jedisProperties.getHost(),jedisProperties.getPort(),jedisProperties.getTimeout());
     }
 }

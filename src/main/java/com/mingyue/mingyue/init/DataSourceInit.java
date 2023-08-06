@@ -13,6 +13,6 @@ import java.sql.SQLException;
 public class DataSourceInit extends DataSourceLinkFactory {
 
     public DataSourceInit() {
-        System.err.println("start");
+
     }
 }

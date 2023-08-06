@@ -1,20 +1,63 @@
 package com.mingyue.mingyue.shiro;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
+import com.mingyue.mingyue.bean.UserAccount;
+import com.mingyue.mingyue.service.UserAccountServices;
+import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.realm.SimpleAccountRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class Realm extends AuthorizingRealm {
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Realm extends AuthorizingRealm  {
+    public Logger logger = Logger.getLogger(this.getClass());
+
+    @Autowired
+    private UserAccountServices userAccountServices;
+
+
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+
+        logger.info("授权AuthorizationInfo");
+
+        SimpleAuthorizationInfo  info = new SimpleAuthorizationInfo ();
+        Subject subject = SecurityUtils.getSubject(); //拿到user对象
+        UserAccount account = (UserAccount) subject.getPrincipal();
+        List<String> ps = new ArrayList<>();
+
+        //放东西。
+        info.addStringPermissions(ps);
+
+       return info;
+
     }
+
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        return null;
+        logger.info("认证AuthenticationInfo");
+        UsernamePasswordToken token = (UsernamePasswordToken)authenticationToken;
+        UserAccount userAccount = userAccountServices.findByUsername(token.getUsername());
+
+        SimpleAuthenticationInfo retAu;
+        if (userAccount == null) {
+            throw new RuntimeException("账号不存在");
+
+        } else {
+            retAu = new SimpleAuthenticationInfo(userAccount, userAccount.getPassWord(), this.getName());
+        }
+        return retAu;
     }
 }

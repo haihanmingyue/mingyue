@@ -14,10 +14,7 @@ import com.itextpdf.layout.property.TextAlignment;
 
 /**
  * 页码
- *
- * @author 钱凯
- * @version 1.0
- * @date 2021-03-16 11:30:28
+
  */
 public class PageMarker implements IEventHandler {
 

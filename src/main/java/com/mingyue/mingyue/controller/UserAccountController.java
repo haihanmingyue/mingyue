@@ -25,7 +25,7 @@ public class UserAccountController extends BaseController{
 
     @RequestMapping("/register")
     @ResponseBody
-    public ReturnBean register(@RequestBody @Validated UserAccount user) {
+    public ReturnBean register(@RequestBody @Validated UserAccount user) throws Exception {
         accountServices.register(user);
         return ReturnBean.ok("注册成功").setData("注册成功");
     }
