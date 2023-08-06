@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.documents4j.api.DocumentType;
 import com.lowagie.text.DocumentException;
 import com.mingyue.mingyue.bean.ChildRenFactory3;
+import com.mingyue.mingyue.bean.LoginInfo;
 import com.mingyue.mingyue.bean.ReturnBean;
 import com.mingyue.mingyue.bean.UserAccount;
 import com.mingyue.mingyue.config.Config;
@@ -127,7 +128,7 @@ public class HellowController extends BaseController {
                 BaseContextUtils.login(userAccount,rememberMe);
                 Session session = BaseContextUtils.getCurrentSession();
                 //登录失败就报错
-                return ReturnBean.ok("登录成功").setData(session.getId());
+                return ReturnBean.ok("登录成功").setData(new LoginInfo(userAccount,session));
 
             }catch (Exception e) {
                 logger.error(e);

@@ -4,13 +4,13 @@
     <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
 
 
-
     <select id="findByUsername" parameterType="String" resultType="com.mingyue.mingyue.bean.UserAccount">
         select
                uuid,
                user_name as userName,
                pass_word as passWord,
-               salt
+               salt,
+               header_pic as headerPci
         from user_account
         where user_name = #{username}
     </select>
@@ -28,7 +28,8 @@
         #{createdDate},
         #{createdBy},
         #{updateDate},
-        #{updateBy}
+        #{updateBy},
+                #{headerPci}
         )
 
     </insert>
@@ -45,7 +46,8 @@
         created_date,
         created_by,
         update_date,
-        update_by
+        update_by,
+        #{header_pci}
     </sql>
 
     <insert id="batchInsert" parameterType="list">
@@ -63,7 +65,8 @@
             #{item.createdDate},
             #{item.createdBy},
             #{item.updateDate},
-            #{item.updateBy}
+            #{item.updateBy},
+            #{item.headerPci}
 
             )
         </foreach>

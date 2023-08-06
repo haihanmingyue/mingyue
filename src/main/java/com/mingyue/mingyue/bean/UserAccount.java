@@ -13,6 +13,8 @@ public class UserAccount extends BaseBean {
     @NotBlank(message = "passWord is not null")
     private String passWord;
 
+    private String headerPci;
+
     private String salt;
     private Short deleteStatus;
     private Short status;
@@ -20,6 +22,14 @@ public class UserAccount extends BaseBean {
     private String createdBy;
     private Date updateDate;
     private String updateBy;
+
+    public String getHeaderPci() {
+        return headerPci;
+    }
+
+    public void setHeaderPci(String headerPci) {
+        this.headerPci = headerPci;
+    }
 
     public String getSalt() {
         return salt;
