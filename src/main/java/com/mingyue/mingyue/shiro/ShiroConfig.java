@@ -1,4 +1,4 @@
-package com.mingyue.mingyue.config;
+package com.mingyue.mingyue.shiro;
 
 
 

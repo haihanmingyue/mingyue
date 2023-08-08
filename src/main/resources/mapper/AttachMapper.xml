@@ -4,13 +4,13 @@
     <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
 
 
-    <select id="get" parameterType="String" resultType="com.mingyue.mingyue.bean.AttachBean">
+    <select id="get" parameterType="String" resultType="com.mingyue.mingyue.bean.Attach">
         select
         <include refid="allFields"/>
         from attach where uuid = #{uuid}
     </select>
 
-    <select id="findByWhere" parameterType="Map" resultType="com.mingyue.mingyue.bean.AttachBean">
+    <select id="findByWhere" parameterType="Map" resultType="com.mingyue.mingyue.bean.Attach">
         select
         <include refid="allFields"/>
         from attach
@@ -21,7 +21,7 @@
     </select>
 
 
-    <select id="findBySubType" parameterType="Map" resultType="com.mingyue.mingyue.bean.AttachBean">
+    <select id="findBySubType" parameterType="Map" resultType="com.mingyue.mingyue.bean.Attach">
         select
         uuid,`name`,attach_sub_type as attachSubType
         from attach
@@ -31,7 +31,7 @@
         order by id asc
     </select>
 
-    <insert id="create"  parameterType="com.mingyue.mingyue.bean.AttachBean" >
+    <insert id="create"  parameterType="com.mingyue.mingyue.bean.Attach" >
         insert into attach  (<include refid="attachInsertFields"/>)
         values (
         #{uuid},
@@ -62,8 +62,8 @@
 		updated_by as updatedBy,
 		updated_date as updatedDate,
 		created_date as createdDate,
-attach_sub_type as attachSubType,
-attach_type as attachType
+        attach_sub_type as attachSubType,
+        attach_type as attachType
     </sql>
 
     <sql id="attachInsertFields">

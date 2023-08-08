@@ -1,15 +1,18 @@
-package com.mingyue.mingyue.config;
+package com.mingyue.mingyue.jedis;
 
 
+import com.mingyue.mingyue.factory.YmlFactory;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
+@PropertySource(value = "classpath:jedis.yml", factory = YmlFactory.class)
 @ConfigurationProperties(prefix = "jedis.pool")
-@Getter
-@Setter
+@Data
 public class JedisProperties {
     private int maxTotal;
     private int maxIdle;
@@ -24,4 +27,5 @@ public class JedisProperties {
     private String password;
     private int port;
     private int timeout;
+
 }

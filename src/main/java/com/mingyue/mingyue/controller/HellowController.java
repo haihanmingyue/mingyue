@@ -22,9 +22,16 @@ import com.mingyue.mingyue.utils.MapUtil;
 import com.mingyue.mingyue.utils.RsaUtils;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import io.lettuce.core.RedisClient;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.shiro.session.Session;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -44,7 +51,7 @@ import java.util.*;
  * */
 @Controller
 @RequestMapping("hello")
-public class HellowController extends BaseController {
+public class HellowController extends ThrowExceptionController implements ApplicationContextAware {
     @Autowired
     private Configuration configuration;
 
@@ -58,93 +65,10 @@ public class HellowController extends BaseController {
     private JedisPool jedisPool;
 
     @Autowired
+    private RedissonClient redisson;
+
+    @Autowired
     private PdfService pdfService;
-
-//    @RequestMapping("/upload")
-//    @ResponseBody
-//    public void hellow(HttpServletRequest request, HttpServletResponse response) throws ServletRequestBindingException, IOException {
-//        // 获得文件：  FileParam fileParam = new FileParam();
-//        logger.warn("xxx-> " + Config.upload);
-//        String fn = "fileToUpload";
-//        if (request instanceof MultipartHttpServletRequest multipartRequest) {
-//            List<MultipartFile> files = multipartRequest.getFiles(fn);
-//            for (MultipartFile file : files) {
-//
-//                File savePos = new File(Config.upload);
-//                if (!savePos.exists()) {  // 不存在，则创建该文件夹
-//                    savePos.mkdir();
-//                }
-//                String realPath = savePos.getCanonicalPath();
-//                // 上传该文件/图像至该文件夹下
-//                try {
-//                    String fileName = file.getOriginalFilename();
-//                    if (StringUtil.isNullOrEmpty(fileName))
-//                        throw new RuntimeException("fileName is null");
-//                    int i  = fileName.lastIndexOf(".");
-//                    String UUid = UUID.randomUUID().toString();
-//                    String newFileName = UUid + fileName.substring(i);
-//                    System.err.println(newFileName);
-//                    file.transferTo(new File(realPath + "/" + newFileName));
-//
-//                    logger.info("upload success");
-//                    response.getWriter().println("upload success fileId-> " + UUid);
-//                } catch (IOException e) { ;
-//                    response.getWriter().println("upload failed");
-//                    logger.warn("error->", e);
-//                    throw e;
-//                }
-//            }
-//        }
-//    }
-
-
-    @RequestMapping("/login")
-    @ResponseBody
-    public ReturnBean login(HttpServletRequest request) throws Exception {
-        String username = ServletRequestUtils.getRequiredStringParameter(request,"username");
-        String password = ServletRequestUtils.getRequiredStringParameter(request,"password");
-        Integer rememberMe = ServletRequestUtils.getIntParameter(request,"rememberMe", 0);
-
-        UserAccount userAccount = userAccountServices.findByUsername(username);
-
-        if (userAccount == null) {
-
-            throw new RuntimeException("账号不存在");
-        } else {
-
-            password = new String(RsaUtils.decryptByPrivateKey(Base64Util.decode(password),RsaUtils.RSA_PRIVATE_KEY));
-
-            Md5Hash MD5 = new Md5Hash(password,userAccount.getSalt(),1024);
-            password = MD5.toHex();
-
-
-            if (!password.equals(userAccount.getPassWord())) {
-                throw new RuntimeException("用户名或密码错误");
-            }
-
-            try {
-
-
-                BaseContextUtils.login(userAccount,rememberMe);
-                Session session = BaseContextUtils.getCurrentSession();
-                //登录失败就报错
-                return ReturnBean.ok("登录成功").setData(new LoginInfo(userAccount,session));
-
-            }catch (Exception e) {
-                logger.error(e);
-                throw new RuntimeException("服务器内部错误，登录失败");
-            }
-
-        }
-    }
-
-
-    @RequestMapping("/loginOut")
-    @ResponseBody
-    public ReturnBean loginOut(HttpServletRequest request,HttpServletResponse response) throws ServletRequestBindingException, IOException {
-        BaseContextUtils.loginout();
-        return ReturnBean.ok("退出成功");
-    }
 
     @RequestMapping("/hello")
     @ResponseBody
@@ -345,6 +269,12 @@ public class HellowController extends BaseController {
             case Green -> System.err.println(color.id);
             case Yellow -> System.err.println(color.id + color.name);
         }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        jedisPool.getResource().setex("key",60000L,"123");
+        System.err.println(jedisPool.getResource().ttl("key"));
     }
 
     enum Color{

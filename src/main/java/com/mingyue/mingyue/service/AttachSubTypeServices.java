@@ -1,9 +1,6 @@
 package com.mingyue.mingyue.service;
 
-import com.mingyue.mingyue.bean.AttachBean;
 import com.mingyue.mingyue.bean.AttachSubType;
-import com.mingyue.mingyue.bean.AttachType;
-import com.mingyue.mingyue.dao.AttachDao;
 import com.mingyue.mingyue.dao.AttachSubTypeDao;
 import org.apache.shiro.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

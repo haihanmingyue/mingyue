@@ -4,8 +4,6 @@ server:
   servlet:
     context-path: /mingyue
 
-
-
 spring:
   servlet:
     multipart:
@@ -64,24 +62,8 @@ logging:
 
 file:
   upload:
-    path: /home/mingyue/upload
-#   path: src/main/resources/upload
+#    path: /home/mingyue/upload
+   path: src/main/resources/upload
 
 config:
 
-
-jedis:
-  pool:
-    host: 192.168.31.193
-    port: 6379
-    password:
-    timeout: 7200
-    maxTotall: 20
-    maxIdle: 50
-    minIdle: 20
-    maxWaitMillis: 10000
-    testOnBorrow: true
-    testOnRerurn: true,
-    timeBetweenEvictionRunsMillis: 30000
-    testWhileIdle: true
-    numTestPerEvictionRun: 50

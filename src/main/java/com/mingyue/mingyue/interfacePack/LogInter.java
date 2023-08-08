@@ -1,4 +1,4 @@
-package com.mingyue.mingyue.dao;
+package com.mingyue.mingyue.interfacePack;
 
 
 import java.lang.annotation.*;

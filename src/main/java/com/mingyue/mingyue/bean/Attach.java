@@ -1,6 +1,6 @@
 package com.mingyue.mingyue.bean;
 
-public class AttachBean extends BaseBean{
+public class Attach extends BaseBean{
 
     private String path;
     private String name;

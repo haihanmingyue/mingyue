@@ -1,4 +1,4 @@
-package com.mingyue.mingyue.config;
+package com.mingyue.mingyue.mq;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.ReturnedMessage;

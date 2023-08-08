@@ -1,6 +1,8 @@
 package com.mingyue.mingyue;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.annotation.MapperScans;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,8 +13,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 
 
-@SpringBootApplication(scanBasePackages = {"com.*.*.*"})
+@SpringBootApplication(scanBasePackages = {"com.mingyue.*.*"})
 @EnableRabbit
+@MapperScan(basePackages = {"com.mingyue.*.*"}, annotationClass = Mapper.class) //只扫有mapper注解的，防止把别的扫进来报错
 //@MapperScan(basePackages = {"com.*.*.dao"})   // springboot版本问题 版本要和 mybatis能对应上
 //@ServletComponentScan(basePackages = {"com.*.*.filter"}) // springboot版本问题
 // 换成springboot 2 就可以了  javax.servlet.annotation.WebFilter;

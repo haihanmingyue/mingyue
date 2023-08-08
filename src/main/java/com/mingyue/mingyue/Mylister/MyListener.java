@@ -1,18 +1,13 @@
 package com.mingyue.mingyue.Mylister;
 
-import com.mingyue.mingyue.config.RabbitmqConfig;
+import com.mingyue.mingyue.mq.RabbitmqConfig;
 import com.rabbitmq.client.Channel;
 import org.apache.log4j.Logger;
-import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.listener.adapter.AbstractAdaptableMessageListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;

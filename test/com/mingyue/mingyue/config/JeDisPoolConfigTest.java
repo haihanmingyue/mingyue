@@ -1,15 +1,10 @@
 package com.mingyue.mingyue.config;
 
+import com.mingyue.mingyue.jedis.JeDisPoolConfig;
+import com.mingyue.mingyue.mq.RabbitmqConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-
-import javax.annotation.Resource;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class JeDisPoolConfigTest extends JeDisPoolConfig {

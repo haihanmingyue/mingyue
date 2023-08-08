@@ -1,6 +1,7 @@
-package com.mingyue.mingyue.config;
+package com.mingyue.mingyue.jedis;
 
-import io.netty.util.internal.StringUtil;
+import com.alibaba.fastjson2.JSON;
+import com.mingyue.mingyue.jedis.JedisProperties;
 import org.apache.shiro.util.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ public class JeDisPoolConfig {
     @Bean
     public JedisPool jeDisPool(JedisProperties jedisProperties) {
 
+        System.err.println(JSON.toJSONString(jedisProperties));
         JedisPoolConfig config = new JedisPoolConfig();
 //        config.setMaxTotal(jedisProperties.getMaxTotal());
         config.setMaxIdle(jedisProperties.getMaxIdle());
@@ -31,6 +33,9 @@ public class JeDisPoolConfig {
                     jedisProperties.getTimeout(),jedisProperties.getPassword());
         }
 
+        System.err.println("host" + jedisProperties.getHost());
+        System.err.println("port" + jedisProperties.getPort());
+        System.err.println("初始化jedis_pool");
         return new JedisPool(config,jedisProperties.getHost(),jedisProperties.getPort(),jedisProperties.getTimeout());
     }
 }

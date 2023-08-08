@@ -1,24 +1,19 @@
 package com.mingyue.mingyue.log4j;
 
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.mingyue.mingyue.dao.LogInter;
-import lombok.extern.log4j.Log4j;
+import com.mingyue.mingyue.interfacePack.LogInter;
 import org.apache.catalina.connector.RequestFacade;
 import org.apache.catalina.connector.ResponseFacade;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Map;
 
 
 @Aspect
@@ -29,7 +24,7 @@ public class LogAspect {
     /**
      * 定义切入点
      */
-    @Pointcut("@annotation(com.mingyue.mingyue.dao.LogInter)")
+    @Pointcut("@annotation(com.mingyue.mingyue.interfacePack.LogInter)")
     public void logInter(){
         
     }

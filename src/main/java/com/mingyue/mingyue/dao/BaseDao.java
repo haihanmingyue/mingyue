@@ -16,4 +16,6 @@ public interface BaseDao<T> {
    List<T> findByWhere(Map<String,?> params);
 
    T findOneByWhere(Map<String,?> params);
+
+   void delete(String uuid);
 }

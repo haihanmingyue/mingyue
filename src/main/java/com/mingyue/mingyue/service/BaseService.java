@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mingyue.mingyue.bean.BaseBean;
 import com.mingyue.mingyue.dao.BaseDao;
+import com.mingyue.mingyue.interfacePack.DeleteStatus;
+import com.mingyue.mingyue.utils.BaseContextUtils;
 import io.netty.util.internal.StringUtil;
 import org.apache.log4j.Logger;
 import org.apache.shiro.util.StringUtils;
@@ -30,6 +32,10 @@ public abstract class BaseService<T extends BaseBean,D extends BaseDao<T>>{
         if (!StringUtils.hasText(bean.getUuid())) {
             bean.setUuid(UUID.randomUUID().toString());
         }
+        if (BaseContextUtils.getCurrentHumanId() != null) {
+            bean.setCreatedBy(BaseContextUtils.getCurrentHumanId());
+            bean.setUpdateBy(BaseContextUtils.getCurrentHumanId());
+        }
         getDao().create(bean);
 
     }
@@ -38,6 +44,9 @@ public abstract class BaseService<T extends BaseBean,D extends BaseDao<T>>{
     public void update(T bean) {
         bean.setId(null);
         bean.setUpdateDate(new Date());
+        if (BaseContextUtils.getCurrentHumanId() != null) {
+            bean.setUpdateBy(BaseContextUtils.getCurrentHumanId());
+        }
         getDao().update(bean);
 
     }
@@ -55,6 +64,18 @@ public abstract class BaseService<T extends BaseBean,D extends BaseDao<T>>{
         List<T> list = findByWhere(params);
         PageInfo<T> pageInfo = new PageInfo<>(list);
         return pageInfo.getList().get(0);
+    }
+
+    @Transactional(rollbackFor = { RuntimeException.class, Exception.class })
+    public void delete(T bean) {
+
+        if (bean instanceof DeleteStatus) {
+            bean.setDeleteStatus(DeleteStatus.DELETE_STATUS_DELETE_YES);
+            update(bean);
+        } else {
+            getDao().delete(bean.getUuid());
+        }
+
     }
 
 }

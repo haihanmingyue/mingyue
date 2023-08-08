@@ -1,9 +1,8 @@
 package com.mingyue.mingyue.controller;
 
 
-import com.alibaba.fastjson2.JSON;
 import com.mingyue.mingyue.Mylister.MyListener;
-import com.mingyue.mingyue.config.RabbitmqConfig;
+import com.mingyue.mingyue.mq.RabbitmqConfig;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -14,15 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * rabbitmq测试
+ *
+ * */
 @Controller
 @RequestMapping("send")
-public class SendMsgController extends BaseController {
+public class SendMsgController extends ThrowExceptionController {
 
     //注入rabbitmq模板
     @Autowired

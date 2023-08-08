@@ -1,14 +1,10 @@
 package com.mingyue.mingyue.service;
 
-import com.mingyue.mingyue.bean.AttachBean;
+import com.mingyue.mingyue.bean.Attach;
 import com.mingyue.mingyue.bean.ReturnBean;
-import com.mingyue.mingyue.bean.UserAccount;
 import com.mingyue.mingyue.config.Config;
 import com.mingyue.mingyue.dao.AttachDao;
-import com.mingyue.mingyue.dao.UserAccountDao;
-import com.mingyue.mingyue.utils.SaltUtils;
 import io.netty.util.internal.StringUtil;
-import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class AttachServices extends BaseService<AttachBean,AttachDao>{
+public class AttachServices extends BaseService<Attach,AttachDao>{
 
     @Autowired
     private AttachDao dao;
@@ -45,7 +41,7 @@ public class AttachServices extends BaseService<AttachBean,AttachDao>{
 //        logger.warn("xxx-> " + Config.upload);
         String fn = "fileToUpload";
         String subType = ServletRequestUtils.getStringParameter(request,"subType");
-        AttachBean attachBean = null;
+        Attach attach = null;
         if (request instanceof MultipartHttpServletRequest multipartRequest) {
             List<MultipartFile> files = multipartRequest.getFiles(fn);
             for (MultipartFile file : files) {
@@ -68,13 +64,13 @@ public class AttachServices extends BaseService<AttachBean,AttachDao>{
                     String newFileName = UUid + fileName.substring(i); //改名
 
                     //创建附件数据
-                    attachBean = new AttachBean();
-                    attachBean.setName(fileName);
-                    attachBean.setUuid(UUid);
-                    attachBean.setPath(realPath);
-                    attachBean.setType(type);
-                    attachBean.setAttachSubType(subType);
-                    create(attachBean);
+                    attach = new Attach();
+                    attach.setName(fileName);
+                    attach.setUuid(UUid);
+                    attach.setPath(realPath);
+                    attach.setType(type);
+                    attach.setAttachSubType(subType);
+                    create(attach);
 
                     file.transferTo(new File(realPath + "/" + newFileName)); //存储磁盘
                     logger.info("upload success");
@@ -91,14 +87,14 @@ public class AttachServices extends BaseService<AttachBean,AttachDao>{
         }
 
 
-        if (attachBean != null && StringUtils.hasText(attachBean.getUuid())) {
-            return ReturnBean.ok("上传成功").setData(attachBean.getUuid());
+        if (attach != null && StringUtils.hasText(attach.getUuid())) {
+            return ReturnBean.ok("上传成功").setData(attach.getUuid());
         }
         return ReturnBean.error("上传失败");
     }
 
 
-    public List<AttachBean> findBySubType(Map<String,?> params) {
+    public List<Attach> findBySubType(Map<String,?> params) {
 
         return getDao().findBySubType(params);
 

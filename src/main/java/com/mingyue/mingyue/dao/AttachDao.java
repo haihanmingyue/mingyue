@@ -1,15 +1,15 @@
 package com.mingyue.mingyue.dao;
 
 
-import com.mingyue.mingyue.bean.AttachBean;
-import com.mingyue.mingyue.bean.UserAccount;
+import com.mingyue.mingyue.bean.Attach;
+import com.mingyue.mingyue.bean.AttachType;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface AttachDao extends BaseDao<AttachBean>{
+public interface AttachDao extends BaseDao<Attach> {
 
-    List<AttachBean> findBySubType(Map<String,?> params);
+    List<Attach> findBySubType(Map<String,?> params);
 }

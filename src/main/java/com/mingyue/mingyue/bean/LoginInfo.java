@@ -1,5 +1,6 @@
 package com.mingyue.mingyue.bean;
 
+import com.mingyue.userrole.bean.UserMenuBean;
 import org.apache.shiro.session.Session;
 
 import java.util.List;
@@ -9,6 +10,8 @@ public class LoginInfo {
     private String uuid;
     private String headerPic;
     private String sessionId;
+
+    private List<UserMenuBean> userMenuLists;
 
     public LoginInfo() {
 
@@ -22,6 +25,14 @@ public class LoginInfo {
         if (session != null) {
             setSessionId(session.getId().toString());
         }
+    }
+
+    public List<UserMenuBean> getUserMenuLists() {
+        return userMenuLists;
+    }
+
+    public void setUserMenuLists(List<UserMenuBean> userMenuLists) {
+        this.userMenuLists = userMenuLists;
     }
 
     public String getUuid() {

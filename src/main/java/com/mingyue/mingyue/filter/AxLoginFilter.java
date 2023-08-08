@@ -50,7 +50,7 @@ public class AxLoginFilter extends AdviceFilter {
 
         s = "/mingyue"; //servicesName
 
-        excludeUrls.add(s + "/hello/login");
+        excludeUrls.add(s + "/user/login");
         excludeUrls.add(s + "/user/register");
     }
 

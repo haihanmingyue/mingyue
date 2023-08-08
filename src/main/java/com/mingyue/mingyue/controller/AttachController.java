@@ -2,23 +2,18 @@ package com.mingyue.mingyue.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mingyue.mingyue.bean.AttachBean;
-import com.mingyue.mingyue.bean.AttachSubType;
+import com.mingyue.mingyue.bean.Attach;
 import com.mingyue.mingyue.bean.ReturnBean;
-import com.mingyue.mingyue.bean.UserAccount;
-import com.mingyue.mingyue.config.Config;
+import com.mingyue.mingyue.dao.AttachDao;
 import com.mingyue.mingyue.service.AttachServices;
-import com.mingyue.mingyue.service.UserAccountServices;
 import com.mingyue.mingyue.utils.MapUtil;
 import com.mingyue.mingyue.utils.SetContentTypeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,7 +28,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("attach")
-public class AttachController extends BaseController{
+public class AttachController extends BaseController<Attach, AttachDao,AttachServices> {
 
 
 
@@ -50,17 +45,17 @@ public class AttachController extends BaseController{
     @RequestMapping("/download")
     public void download(@RequestParam(name = "uuid") String uuid, HttpServletResponse response) throws IOException {
 
-        AttachBean attachBean = attachServices.get(uuid);
+        Attach attach = attachServices.get(uuid);
 
-        if (attachBean == null) {
+        if (attach == null) {
             throw new RemoteException("附件不存在");
         }
 
-        File file = new File(attachBean.getPath() + "/" + attachBean.getUuid() + "." + attachBean.getType());
+        File file = new File(attach.getPath() + "/" + attach.getUuid() + "." + attach.getType());
         String fileName = file.getName();
 
 
-        response.setContentType(SetContentTypeUtil.map.get(attachBean.getType()));
+        response.setContentType(SetContentTypeUtil.map.get(attach.getType()));
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION,  "attachment;filename="+ fileName);
 
         response.addHeader(HttpHeaders.CONTENT_LENGTH, "" + file.length());
@@ -83,9 +78,9 @@ public class AttachController extends BaseController{
         String uuid = ServletRequestUtils.getStringParameter(request,"uuid");
 
 
-        AttachBean attachBean = attachServices.get(uuid);
+        Attach attach = attachServices.get(uuid);
 
-        if (attachBean == null) {
+        if (attach == null) {
             throw new RemoteException("附件不存在");
         }
 
@@ -94,9 +89,9 @@ public class AttachController extends BaseController{
         RandomAccessFile targetFile = null;
         OutputStream outputStream = null;
         try {
-            File file = new File(attachBean.getPath() + "/" + attachBean.getUuid() + "." + attachBean.getType());
+            File file = new File(attach.getPath() + "/" + attach.getUuid() + "." + attach.getType());
             String fileName = file.getName();
-            response.setContentType(SetContentTypeUtil.map.get(attachBean.getType()));
+            response.setContentType(SetContentTypeUtil.map.get(attach.getType()));
             outputStream = response.getOutputStream();
             response.reset();
             //获取请求头中Range的值
@@ -199,13 +194,11 @@ public class AttachController extends BaseController{
     }
 
 
-
-    @RequestMapping("/list")
-    @ResponseBody
-    public ReturnBean list(HttpServletRequest request) {
+    @Override
+    public ReturnBean list(HttpServletRequest request, HttpServletResponse response) {
         Map<String,String> map = MapUtil.getRequestParamsMap(request);
         PageHelper.startPage(1,999);
-        List<AttachBean> list =  attachServices.findByWhere(map);
+        List<Attach> list =  attachServices.findByWhere(map);
         PageInfo pageInfo = new PageInfo(list);
         return ReturnBean.ok("查询成功").setData("success").setData(MapUtil.genMap("rows",pageInfo.getList(),"total",pageInfo.getTotal()));
     }
@@ -215,9 +208,13 @@ public class AttachController extends BaseController{
     public ReturnBean findBySubType(HttpServletRequest request) {
         Map<String,String> map = MapUtil.getRequestParamsMap(request);
         PageHelper.startPage(1,999);
-        List<AttachBean> list =  attachServices.findBySubType(map);
+        List<Attach> list =  attachServices.findBySubType(map);
         PageInfo pageInfo = new PageInfo(list);
         return ReturnBean.ok("查询成功").setData("success").setData(MapUtil.genMap("rows",pageInfo.getList(),"total",pageInfo.getTotal()));
     }
 
+    @Override
+    protected AttachServices getService() {
+        return attachServices;
+    }
 }

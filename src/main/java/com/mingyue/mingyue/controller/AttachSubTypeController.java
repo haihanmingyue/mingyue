@@ -7,6 +7,7 @@ import com.mingyue.mingyue.bean.AttachSubType;
 import com.mingyue.mingyue.bean.AttachType;
 import com.mingyue.mingyue.bean.ReturnBean;
 import com.mingyue.mingyue.bean.UserAccount;
+import com.mingyue.mingyue.dao.AttachSubTypeDao;
 import com.mingyue.mingyue.service.AttachSubTypeServices;
 import com.mingyue.mingyue.service.UserAccountServices;
 import com.mingyue.mingyue.utils.MapUtil;
@@ -21,13 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
 
 @Controller
 @RequestMapping("attachSubType")
-public class AttachSubTypeController extends BaseController{
+public class AttachSubTypeController extends BaseController<AttachSubType, AttachSubTypeDao,AttachSubTypeServices> {
 
 
 
@@ -43,13 +45,17 @@ public class AttachSubTypeController extends BaseController{
         return ReturnBean.ok("更新成功").setData("success");
     }
 
-    @RequestMapping("/list")
-    @ResponseBody
-    public ReturnBean list(HttpServletRequest request) {
+    @Override
+    public ReturnBean list(HttpServletRequest request, HttpServletResponse response) {
         Map<String,String> map = MapUtil.getRequestParamsMap(request);
         PageHelper.startPage(1,999);
         List<AttachSubType> list =  attachSubTypeServices.findByWhere(map);
         PageInfo pageInfo = new PageInfo(list);
         return ReturnBean.ok("查询成功").setData("success").setData(MapUtil.genMap("rows",pageInfo.getList(),"total",pageInfo.getTotal()));
+    }
+
+    @Override
+    protected AttachSubTypeServices getService() {
+        return attachSubTypeServices;
     }
 }
