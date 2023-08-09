@@ -31,14 +31,6 @@ public class AttachTypeController extends BaseController<AttachType, AttachTypeD
     private AttachTypeServices attachTypeServices;
 
 
-
-    @RequestMapping("/save")
-    @ResponseBody
-    public ReturnBean save(@RequestBody @Validated AttachType attachType) {
-        attachTypeServices.save(attachType);
-        return ReturnBean.ok("更新成功").setData("success");
-    }
-
     @Override
     public ReturnBean list(HttpServletRequest request, HttpServletResponse httpServletResponse) {
         List<AttachType> list =  attachTypeServices.findByWhere(MapUtil.genMap());

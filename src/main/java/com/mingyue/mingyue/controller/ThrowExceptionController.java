@@ -26,13 +26,14 @@ public abstract class ThrowExceptionController {
             List<ObjectError> list = e.getAllErrors();
             for (ObjectError error : list) {
                 errorMsg = error.getDefaultMessage();
-                logger.error(error.getDefaultMessage());
+                logger.error(error);
                 break;
             }
         }
         else if (ex instanceof RuntimeException) {
             RuntimeException e = (RuntimeException) ex;
-            logger.error(e.getMessage());
+            logger.error(e);
+            e.printStackTrace();
             errorMsg = e.getMessage();
         }
         else {

@@ -2,6 +2,7 @@ package com.mingyue.mingyue.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mingyue.mingyue.bean.AttachType;
 import com.mingyue.mingyue.bean.BaseBean;
 import com.mingyue.mingyue.dao.BaseDao;
 import com.mingyue.mingyue.interfacePack.DeleteStatus;
@@ -50,6 +51,19 @@ public abstract class BaseService<T extends BaseBean,D extends BaseDao<T>>{
         getDao().update(bean);
 
     }
+
+
+    @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
+    public void save(T bean) {
+
+        if (StringUtils.hasText(bean.getUuid())) {
+            update(bean);
+        } else {
+            bean.setUuid(UUID.randomUUID().toString());
+            create(bean);
+        }
+    }
+
 
     public T get(String uuid) {
         return getDao().get(uuid);

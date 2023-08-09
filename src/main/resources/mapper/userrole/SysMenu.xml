@@ -19,7 +19,8 @@
 		created_by as createdBy,
 		updated_by as updatedBy,
 		updated_date as updatedDate,
-		created_date as createdDate
+		created_date as createdDate,
+        name_cn as nameCn
     </sql>
 
     <sql id="whereClause">
@@ -75,7 +76,10 @@
             and `name` like concat(#{nameLike},'%')
         </if>
         <if test="createdDate != null">
-            Date(created_date) = Date(#{createdDate})
+           and Date(created_date) = Date(#{createdDate})
+        </if>
+        <if test="nameCn != null">
+            and name_cn like concat('%',#{nameCn},'%')
         </if>
     </sql>
 
@@ -119,10 +123,13 @@
             updated_by = #{updated_by},
         </if>
         <if test="createdDate != null">
-            created_date) = #{createdDate},
+            created_date = #{createdDate},
         </if>
         <if test="updateDate != null">
-            update_date) = #{updateDate}
+            update_date = #{updateDate},
+        </if>
+        <if test="nameCn != null">
+            name_cn = #{nameCn}
         </if>
     </sql>
 
@@ -141,11 +148,18 @@
 		created_by,
 		updated_by,
 		updated_date,
-		created_date
+		created_date,
+        name_cn
     </sql>
 
 
-    <select id="findByWhere" parameterType="map" resultType="com.mingyue.userrole.bean.SysMenu">
+    <select id="get" parameterType="String" resultType="com.mingyue.userrole.bean.SysMenu">
+        select <include refid="allFields"/>
+        from sys_menu
+        where uuid = #{uuid}
+    </select>
+
+    <select id="findByWhere" parameterType="Map" resultType="com.mingyue.userrole.bean.SysMenu">
         select
         <include refid="allFields"/>
         from sys_menu
@@ -162,26 +176,31 @@
         where uuid = #{uuid}
     </update>
 
-    <insert id="create" parameterType="com.mingyue.mingyue.bean.SysMenu">
-        insert into user_account (<include refid="userInsertFields"/>)
+    <insert id="create" parameterType="com.mingyue.userrole.bean.SysMenu">
+        insert into user_account (<include refid="sysMenuFields"/>)
         values (
         #{uuid},
-        #{userName},
-        #{passWord},
-        #{salt},
+        #{roleType},
+        #{path},
+        #{name},
+        #{component},
+        #{code},
+        #{urlLevel},
+        #{fatherId},
+        #{isAllMenu},
         #{deleteStatus},
         #{status},
-        #{createdDate},
         #{createdBy},
-        #{updateDate},
-        #{updateBy},
-        #{headerPic}
+        #{updatedBy},
+        #{updatedDate},
+        #{createdDate},
+        #{nameCn}
         )
 
     </insert>
 
 
-    <delete id="delete" parameterType="com.mingyue.mingyue.bean.SysMenu">
+    <delete id="delete" parameterType="com.mingyue.userrole.bean.SysMenu">
         delete from sys_menu where uuid = #{uuid}
     </delete>
 
@@ -205,8 +224,8 @@
             #{item.createdBy},
             #{item.updatedBy},
             #{item.updatedDate},
-            #{item.createdDate}
-
+            #{item.createdDate},
+            #{item.nameCn}
             )
         </foreach>
     </insert>

@@ -1,4 +1,4 @@
-package com.mingyue.mingyue.controller;
+package com.mingyue.mingyue.netty;
 
 import org.springframework.stereotype.Component;
 

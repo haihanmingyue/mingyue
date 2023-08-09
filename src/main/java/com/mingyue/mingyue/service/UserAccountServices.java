@@ -9,8 +9,10 @@ import com.mingyue.mingyue.utils.BaseContextUtils;
 import com.mingyue.mingyue.utils.RsaUtils;
 import com.mingyue.mingyue.utils.SaltUtils;
 import com.mingyue.userrole.bean.UserMenuBean;
+import com.mingyue.userrole.service.UserMenuServices;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.session.Session;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,9 @@ public class UserAccountServices extends BaseService<UserAccount,UserAccountDao>
 
     @Autowired
     private JedisPool jedisPool;
+
+    @Autowired
+    private UserMenuServices userMenuServices;
 
     @Override
     public UserAccountDao getDao() {
@@ -85,17 +90,13 @@ public class UserAccountServices extends BaseService<UserAccount,UserAccountDao>
                 Session session = BaseContextUtils.getCurrentSession();
                 LoginInfo loginInfo = new LoginInfo(userAccount,session);
 
-
-                List<UserMenuBean> list = new LinkedList<>();
-                UserMenuBean userMenuList = new UserMenuBean();
-                
-                loginInfo.setUserMenuLists(list);
+                loginInfo.setUserMenuLists(userMenuServices.getRoleList());
 
                 //登录失败就报错
                 return ReturnBean.ok("登录成功").setData(loginInfo);
 
             }catch (Exception e) {
-                logger.error(e);
+                e.printStackTrace();
                 throw new RuntimeException("服务器内部错误，登录失败");
             }
 

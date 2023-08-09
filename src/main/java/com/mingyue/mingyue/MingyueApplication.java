@@ -15,9 +15,10 @@ import org.springframework.context.annotation.ComponentScans;
 
 @SpringBootApplication(scanBasePackages = {"com.mingyue.*.*"})
 @EnableRabbit
-@MapperScan(basePackages = {"com.mingyue.*.*"}, annotationClass = Mapper.class) //只扫有mapper注解的，防止把别的扫进来报错
-//@MapperScan(basePackages = {"com.*.*.dao"})   // springboot版本问题 版本要和 mybatis能对应上
-//@ServletComponentScan(basePackages = {"com.*.*.filter"}) // springboot版本问题
+@MapperScan(basePackages = {"com.mingyue.*.dao"}, annotationClass = Mapper.class) //只扫有mapper注解的，防止把别的扫进来报错
+
+
+//@ServletComponentScan(basePackages = {"com.*.*.filter"}) // springboot版本问题,会失效
 // 换成springboot 2 就可以了  javax.servlet.annotation.WebFilter;
 // springboot 3以后 扫描的是  jakata.servlet.annotation.WebFilter;的@WebFilter注解 而且要实现 jakata 下面的Filter
 public class MingyueApplication extends SpringBootServletInitializer {

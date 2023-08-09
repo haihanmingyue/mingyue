@@ -52,6 +52,7 @@ public class AxLoginFilter extends AdviceFilter {
 
         excludeUrls.add(s + "/user/login");
         excludeUrls.add(s + "/user/register");
+        excludeUrls.add(s + "/userMenu/getRoleList");
     }
 
 

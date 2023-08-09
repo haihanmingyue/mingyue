@@ -7,7 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mingyue.mingyue.bean.UserAccount;
-import com.mingyue.mingyue.dao.MethodInterFace;
+import com.mingyue.mingyue.interfacePack.MethodInterFace;
 import com.mingyue.mingyue.dao.TestDao;
 import com.mingyue.mingyue.utils.MapUtil;
 import io.netty.util.internal.StringUtil;

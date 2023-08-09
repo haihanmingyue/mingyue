@@ -36,15 +36,6 @@ public class AttachSubTypeController extends BaseController<AttachSubType, Attac
     @Autowired
     private AttachSubTypeServices attachSubTypeServices;
 
-
-
-    @RequestMapping("/save")
-    @ResponseBody
-    public ReturnBean save(@RequestBody @Validated AttachSubType attachSubType) {
-        attachSubTypeServices.save(attachSubType);
-        return ReturnBean.ok("更新成功").setData("success");
-    }
-
     @Override
     public ReturnBean list(HttpServletRequest request, HttpServletResponse response) {
         Map<String,String> map = MapUtil.getRequestParamsMap(request);

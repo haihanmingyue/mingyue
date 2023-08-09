@@ -2,6 +2,7 @@ package com.mingyue.mingyue.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mingyue.mingyue.bean.AttachType;
 import com.mingyue.mingyue.bean.BaseBean;
 import com.mingyue.mingyue.bean.ReturnBean;
 import com.mingyue.mingyue.bean.User;
@@ -20,9 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -63,5 +66,12 @@ public abstract class BaseController<T extends BaseBean,
 
         return ReturnBean.ok("查询成功").setData(pageInfo);
 
+    }
+
+    @RequestMapping("/save")
+    @ResponseBody
+    public ReturnBean save(@RequestBody @Validated T bean) {
+        getService().save(bean);
+        return ReturnBean.ok("更新成功").setData("success");
     }
 }

@@ -11,7 +11,7 @@ public class LoginInfo {
     private String headerPic;
     private String sessionId;
 
-    private List<UserMenuBean> userMenuLists;
+    private List<UserMenuBean> userMenuList;
 
     public LoginInfo() {
 
@@ -27,12 +27,12 @@ public class LoginInfo {
         }
     }
 
-    public List<UserMenuBean> getUserMenuLists() {
-        return userMenuLists;
+    public List<UserMenuBean> getUserMenuList() {
+        return userMenuList;
     }
 
-    public void setUserMenuLists(List<UserMenuBean> userMenuLists) {
-        this.userMenuLists = userMenuLists;
+    public void setUserMenuLists(List<UserMenuBean> userMenuList) {
+        this.userMenuList = userMenuList;
     }
 
     public String getUuid() {

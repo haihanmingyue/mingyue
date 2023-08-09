@@ -14,11 +14,21 @@ public class SysMenu extends BaseBean {
 
     private String code; // 路径 代号
 
+    private String nameCn;
+
     private String urlLevel; // 路径等级 0-是父节点，。。。依次类推
 
     private String fatherId; //父节点的 uuid
 
     private String isAllMenu;// 是否是公有menu，共有权限不需要授权
+
+    public String getNameCn() {
+        return nameCn;
+    }
+
+    public void setNameCn(String nameCn) {
+        this.nameCn = nameCn;
+    }
 
     public String getIsAllMenu() {
         return isAllMenu;

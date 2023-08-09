@@ -1,6 +1,6 @@
 package com.mingyue.userrole.bean;
 
-import java.util.List;
+import java.util.*;
 
 public class UserMenuBean {
 
@@ -12,7 +12,39 @@ public class UserMenuBean {
 
     private String component;
 
+    private String fatherId;
+
+
+
+
+
     private List<UserMenuBean> childrenList;
+
+
+    public UserMenuBean() {
+
+    }
+
+    public UserMenuBean(SysMenu sysMenu) {
+        if (sysMenu != null) {
+            this.name = sysMenu.getName();
+            this.path = sysMenu.getPath();
+            this.nameCn = sysMenu.getNameCn();
+            this.component = sysMenu.getComponent();
+            this.childrenList = new ArrayList<>();
+            this.fatherId = sysMenu.getFatherId();
+        }
+    }
+
+
+
+    public String getFatherId() {
+        return fatherId;
+    }
+
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
+    }
 
     public String getComponent() {
         return component;
