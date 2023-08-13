@@ -1,0 +1,30 @@
+Appenders:
+  Console:  #\u8F93\u51FA\u5230\u63A7\u5236\u53F0
+    name: CONSOLE
+    target: SYSTEM_OUT
+    PatternLayout:
+      pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"
+  RollingFile: # \u8F93\u51FA\u5230\u6587\u4EF6\uFF0C\u8D85\u8FC7256MB\u5F52\u6863
+    - name: ROLLING_FILE
+      ignoreExceptions: false
+      fileName: ./logs/hhmt-cpa.log
+      filePattern: "./logs/$${date:yyyy-MM}/hhmt-cpa-%d{yyyy-MM-dd}-%i.log"
+      PatternLayout:
+        pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"
+      Policies:
+        SizeBasedTriggeringPolicy:
+          size: "10 KB"
+      DefaultRolloverStrategy:
+        max: 1000
+Loggers:
+  Root:
+    level: info
+    AppenderRef:
+      - ref: CONSOLE
+#  Logger: #\u5355\u72EC\u8BBE\u7F6E\u67D0\u4E9B\u5305\u7684\u8F93\u51FA\u7EA7\u522B
+#    - name: com.hhmt.delivery #\u590D\u6570\u52A0\u4E0A-\uFF08\u8FD9\u91CC\u6211\u8BBE\u7F6E\u7684\u662F\u5305\u7684\u6839\u8DEF\u5F84\u7684\u5305\u540D\uFF09
+#      additivity: false #\u53BB\u9664\u91CD\u590D\u7684log
+#      level: info
+#      AppenderRef:
+#        - ref: CONSOLE #\u590D\u6570\u52A0\u4E0A-
+#        - ref: ROLLING_FILE #\u590D\u6570\u52A0\u4E0A-

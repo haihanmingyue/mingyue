@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mingyue.userrole.dao.UserMenuDao">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+
+    <sql id="allFields">
+        uuid,
+        user_uuid as userUuid,
+        menu_uuid as menuUuid,
+        delete_status as deleteStatus,
+        status,
+		created_by as createdBy,
+		updated_by as updatedBy,
+		updated_date as updatedDate,
+		created_date as createdDate
+    </sql>
+
+    <sql id="insertFields">
+
+        uuid,
+        user_uuid,
+        menu_uuid,
+        delete_status,
+        status,
+        created_date,
+        created_by,
+        updated_date,
+        updated_by
+    </sql>
+
+
+    <select id="findByUser" parameterType="String" resultType="com.mingyue.userrole.bean.UserMenu">
+        select
+          <include refid="allFields"/>
+        from user_menu
+        where user_uuid = #{userUuid}
+    </select>
+
+
+    <insert id="create"  parameterType="com.mingyue.userrole.bean.UserMenu" >
+        insert into user_account  (<include refid="insertFields"/>)
+        values (
+        #{uuid},
+        #{userUuid},
+        #{menuUuid},
+        #{deleteStatus},
+        #{status},
+        #{createdDate},
+        #{createdBy},
+        #{updatedDate},
+        #{updatedBy}
+        )
+
+    </insert>
+
+
+    <insert id="batchInsert" parameterType="list">
+        insert into user_account  (<include refid="insertFields"/>)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+
+            #{item.uuid},
+            #{item.userUuid},
+            #{item.menuUuid},
+            #{item.deleteStatus},
+            #{item.status},
+            #{item.createdDate},
+            #{item.createdBy},
+            #{item.updatedDate},
+            #{item.updatedBy}
+
+            )
+        </foreach>
+    </insert>
+
+</mapper>

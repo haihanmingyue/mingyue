@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mingyue.attach.dao.AttachTypeDao">
+    <!--namespace根据自己需要创建的的mapper的路径和名称填写-->
+
+
+    <select id="get" parameterType="String" resultType="com.mingyue.attach.bean.AttachType">
+        select
+        <include refid="allFields"/>
+        from attach_type where uuid = #{uuid}
+    </select>
+
+    <select id="findByWhere" parameterType="Map" resultType="com.mingyue.attach.bean.AttachType">
+        select
+        <include refid="allFields"/>
+        from attach_type
+        <where>
+            <include refid="whereClause"/>
+        </where>
+        order by id
+    </select>
+
+
+    <insert id="create"  parameterType="com.mingyue.attach.bean.AttachType" >
+        insert into attach_type  (<include refid="attachInsertFields"/>)
+        values (
+        #{uuid},
+        #{name},
+        #{deleteStatus},
+        #{status},
+        #{createdDate},
+        #{createdBy},
+        #{updateDate},
+        #{updateBy},
+        #{pictureUuid}
+        )
+
+    </insert>
+
+
+    <sql id="allFields">
+        uuid,
+        `name`,
+        delete_status as deleteStatus,
+        status,
+		created_by as createdBy,
+		updated_by as updatedBy,
+		updated_date as updatedDate,
+		created_date as createdDate,
+        picture_uuid as pictureUuid
+    </sql>
+
+    <sql id="attachInsertFields">
+
+        uuid,
+        `name`,
+        delete_status,
+        status,
+        created_date,
+        created_by,
+        updated_date,
+        updated_by,
+picture_uuid
+    </sql>
+
+    <sql id="whereClause">
+        <if test="id != null">
+            id = #{id}
+        </if>
+        <if test="type != null">
+            and `type` = #{type}
+        </if>
+        <choose>
+            <when test="deleteStatus != null">
+                and delete_status = #{deleteStatus}
+            </when>
+            <otherwise>
+                and delete_status = 0
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="status != null">
+                and status = #{status}
+            </when>
+            <otherwise>
+                and status = 1
+            </otherwise>
+        </choose>
+        <if test="createdBy != null">
+            and created_by = #{createdBy}
+        </if>
+        <if test="updated_by != null">
+            and updated_by = #{updated_by}
+        </if>
+        <if test="name != null">
+            and name like concat(#{name},'%')
+        </if>
+        <if test="createdDate != null">
+            Date(created_date) = Date(#{createdDate})
+        </if>
+    </sql>
+
+
+    <sql id="setComn">
+
+        <if test="createdBy != null">
+            created_by = #{createdBy},
+        </if>
+        <if test="updated_by != null">
+            updated_by = #{updated_by},
+        </if>
+        <if test="name != null">
+            name = #{name},
+        </if>
+        <if test="deleteStatus != null">
+            delete_status = #{deleteStatus},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+        <if test="pictureUuid != null">
+            picture_uuid = #{pictureUuid}
+        </if>
+    </sql>
+
+    <insert id="batchCreate" parameterType="list">
+        insert into attach_type  (<include refid="attachInsertFields"/>)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+
+            #{item.uuid},
+            #{item.name},
+            #{item.deleteStatus},
+            #{item.status},
+            #{item.createdDate},
+            #{item.createdBy},
+            #{item.updateDate},
+            #{item.updateBy},
+
+            #{item.pictureUuid}
+
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="update" parameterType="com.mingyue.attach.bean.AttachType">
+        update attch_type
+        <set>
+            <include refid="setComn"/>
+        </set>
+        where uuid = #{uuid}
+    </update>
+
+</mapper>
