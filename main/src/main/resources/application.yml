@@ -14,6 +14,21 @@ spring:
     username: root
     password: as521968
     driver-class-name: com.mysql.cj.jdbc.Driver
+  mail:
+    host: smtp.qq.com
+    username: 228681163@qq.com
+    port: 587
+    protocol: smtp
+    password: yfqkdxqqjeitbghe
+    default-encoding: UTF-8
+    jndi-name: azurlane@foxmail.com
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: false
+            required: false
+#        debug: true
 
   redis: #springboot2
     host: 192.168.31.193
@@ -65,5 +80,5 @@ file:
     path: /home/mingyue/upload
 #   path: src/main/resources/upload
 
-config:
+
 
