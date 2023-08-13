@@ -57,7 +57,7 @@ pagehelper:
   params: count=countSql #指定
 
 logging:
-  config: classpath:log4j.yml
+  config: classpath:log4j.properties
 
 
 file:

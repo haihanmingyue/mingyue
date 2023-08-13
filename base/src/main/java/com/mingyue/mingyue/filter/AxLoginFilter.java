@@ -35,13 +35,6 @@ public class AxLoginFilter extends AdviceFilter {
         recacheAuthInfo();
     }
 
-
-    /**
-     * 重置缓存
-     *
-     * @author 钱凯
-     * @date 2023-02-12 14:57:43
-     */
     public void recacheAuthInfo() {
 
         logger.warn("开始初始化");
@@ -53,6 +46,7 @@ public class AxLoginFilter extends AdviceFilter {
         excludeUrls.add(s + "/user/login");
         excludeUrls.add(s + "/user/register");
         excludeUrls.add(s + "/userMenu/getRoleList");
+        excludeUrls.add(s + "/email/getCode");
     }
 
 
