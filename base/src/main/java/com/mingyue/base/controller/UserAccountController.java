@@ -30,8 +30,8 @@ public class UserAccountController extends BaseController<UserAccount, UserAccou
 
     @RequestMapping("/register")
     @ResponseBody
-    public ReturnBean register(@RequestBody @Validated UserAccount user) throws Exception {
-        accountServices.register(user);
+    public ReturnBean register(@RequestBody @Validated UserAccount user,HttpServletRequest request) throws Exception {
+        accountServices.register(user,request);
         return ReturnBean.ok("注册成功").setData("注册成功");
     }
 

@@ -1,5 +1,7 @@
 package com.mingyue.sendmsg.services;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.mingyue.mingyue.RedisConstants;
 import jakarta.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 
@@ -18,9 +20,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
 
 @Service
 public class EmailService {
+
+    private static final ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("thread007-%d").build();
+    /** 线程池 */
+    private static final ScheduledExecutorService eventNotifyScheduledThreadPool = new ScheduledThreadPoolExecutor(1, namedThreadFactory);
+
 
     public Logger logger = Logger.getLogger(this.getClass());
 
@@ -47,9 +57,6 @@ public class EmailService {
 
         StringBuilder code = new StringBuilder();
 
-        //获取httpSession
-        HttpSession session = request.getSession();
-
         //拼接随机四个整数
         Random random = new Random();
         while (code.length() < 4) {
@@ -58,10 +65,12 @@ public class EmailService {
 
         Jedis jedis = jedisPool.getResource();
         // 有效期5分钟
-        jedis.setex(session.getId(),(60L * 5),code.toString());
+        jedis.setex(email + RedisConstants.REGISTER_CODE_KEY,(60L * 5),code.toString());
 
         logger.warn("sendName" + this.sendName);
-        sendSimpleMail(email,this.sendName,"明月的小屋-验证码","您的验证码：" + code.toString() + "，有效期为5分钟");
+
+        //异步执行，不影响前端，发送失败也就失败了，验证码收不到的情况可太多了，大厂都会这样- -
+        eventNotifyScheduledThreadPool.execute(()-> sendSimpleMail(email,this.sendName,"明月的小屋-验证码","您的验证码：" + code + "，有效期为5分钟"));
 
     }
 
