@@ -15,13 +15,7 @@ spring:
     password: as521968
     driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
-    host: smtp.qq.com
-    username: 228681163@qq.com
-    port: 587
-    protocol: smtp
-    password: yfqkdxqqjeitbghe
-    default-encoding: UTF-8
-    jndi-name: azurlane@foxmail.com
+
     properties:
       mail:
         smtp:
