@@ -45,6 +45,11 @@ public class UserAccountController extends BaseController<UserAccount, UserAccou
         return accountServices.login(userAccount,password,rememberMe);
     }
 
+    @RequestMapping("/checkLogin")
+    @ResponseBody
+    public ReturnBean checkLogin(HttpServletRequest request) throws Exception {
+        return ReturnBean.ok("查询成功").setData("success");
+    }
 
     @RequestMapping("/loginOut")
     @ResponseBody

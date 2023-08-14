@@ -15,6 +15,7 @@ public class UserMenuBean {
     private String fatherId;
 
 
+    private Integer isTitleMenu;
 
 
 
@@ -33,10 +34,17 @@ public class UserMenuBean {
             this.component = sysMenu.getComponent();
             this.childrenList = new ArrayList<>();
             this.fatherId = sysMenu.getFatherId();
+            this.isTitleMenu = sysMenu.getIsTitleMenu();
         }
     }
 
+    public Integer getIsTitleMenu() {
+        return isTitleMenu;
+    }
 
+    public void setIsTitleMenu(Integer isTitleMenu) {
+        this.isTitleMenu = isTitleMenu;
+    }
 
     public String getFatherId() {
         return fatherId;

@@ -20,7 +20,8 @@
 		updated_by as updatedBy,
 		updated_date as updatedDate,
 		created_date as createdDate,
-        name_cn as nameCn
+        name_cn as nameCn,
+        is_title_menu as isTitleMenu
     </sql>
 
     <sql id="whereClause">
@@ -49,7 +50,9 @@
         <if test="isAllMenu != null">
             and `is_all_menu` = #{isAllMenu}
         </if>
-
+        <if test="isTitleMenu != null">
+            and is_title_menu = #{isTitleMenu}
+        </if>
         <choose>
             <when test="deleteStatus != null">
                 and delete_status = #{deleteStatus}
@@ -95,6 +98,9 @@
         </if>
         <if test="name != null">
             `name` = #{name},
+        </if>
+        <if test="isTitleMenu != null">
+            is_title_menu = #{isTitleMenu},
         </if>
 
         <if test="component != null">
@@ -149,7 +155,8 @@
 		updated_by,
 		updated_date,
 		created_date,
-        name_cn
+        name_cn,
+        is_title_menu
     </sql>
 
 
@@ -194,7 +201,8 @@
         #{updatedBy},
         #{updatedDate},
         #{createdDate},
-        #{nameCn}
+        #{nameCn},
+        #{isTitleMenu}
         )
 
     </insert>
@@ -225,7 +233,8 @@
             #{item.updatedBy},
             #{item.updatedDate},
             #{item.createdDate},
-            #{item.nameCn}
+            #{item.nameCn},
+             #{item.isTitleMenu}
             )
         </foreach>
     </insert>

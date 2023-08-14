@@ -22,6 +22,16 @@ public class SysMenu extends BaseBean {
 
     private String isAllMenu;// 是否是公有menu，共有权限不需要授权
 
+    private Integer isTitleMenu = 0;
+
+    public Integer getIsTitleMenu() {
+        return isTitleMenu;
+    }
+
+    public void setIsTitleMenu(Integer isTitleMenu) {
+        this.isTitleMenu = isTitleMenu;
+    }
+
     public String getNameCn() {
         return nameCn;
     }
