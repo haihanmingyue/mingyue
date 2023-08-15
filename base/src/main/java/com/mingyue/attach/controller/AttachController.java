@@ -208,7 +208,7 @@ public class AttachController extends BaseController<Attach, AttachDao,AttachSer
     @ResponseBody
     public ReturnBean findBySubType(HttpServletRequest request) {
         Map<String,String> map = MapUtil.getRequestParamsMap(request);
-        PageHelper.startPage(1,999);
+        PageHelper.startPage(map);
         List<Attach> list =  attachServices.findBySubType(map);
         PageInfo pageInfo = new PageInfo(list);
         return ReturnBean.ok("查询成功").setData("success").setData(MapUtil.genMap("rows",pageInfo.getList(),"total",pageInfo.getTotal()));

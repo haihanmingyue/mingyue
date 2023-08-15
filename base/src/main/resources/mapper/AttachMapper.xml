@@ -26,7 +26,10 @@
         uuid,`name`,attach_sub_type as attachSubType
         from attach
         <where>
-            <include refid="whereClause"/>
+           attach_sub_type = #{attachSubType}
+           and ( (created_by = #{createdBy} and permissions = 0) or permissions = 1)
+           and status = 1 and delete_status = 0
+
         </where>
         order by id asc
     </select>
@@ -45,7 +48,8 @@
         #{updateDate},
         #{updateBy},
         #{attachSubType},
-        #{attachType}
+        #{attachType},
+        #{permissions}
         )
 
     </insert>
@@ -63,7 +67,8 @@
 		updated_date as updatedDate,
 		created_date as createdDate,
         attach_sub_type as attachSubType,
-        attach_type as attachType
+        attach_type as attachType,
+        permissions as permissions
     </sql>
 
     <sql id="attachInsertFields">
@@ -78,8 +83,9 @@
         created_by,
         updated_date,
         updated_by,
-attach_sub_type,
-attach_type
+        attach_sub_type,
+        attach_type,
+        permissions
     </sql>
 
     <sql id="whereClause">
@@ -95,6 +101,14 @@ attach_type
         <if test="attachType != null">
             and `attach_type` = #{attachType}
         </if>
+        <choose>
+            <when test="permissions != null">
+                and permissions = #{permissions}
+            </when>
+            <otherwise>
+                and permissions = 0
+            </otherwise>
+        </choose>
         <choose>
             <when test="deleteStatus != null">
                 and delete_status = #{deleteStatus}
@@ -123,6 +137,11 @@ attach_type
         <if test="createdDate != null">
             Date(created_date) = Date(#{createdDate})
         </if>
+
+
+
+
+
     </sql>
 
     <insert id="batchCreate" parameterType="list">
@@ -142,7 +161,8 @@ attach_type
             #{item.updateDate},
             #{item.updateBy},
             #{item.attachSubType},
-            #{item.attachType}
+            #{item.attachType},
+            #{item.permissions}
 
             )
         </foreach>

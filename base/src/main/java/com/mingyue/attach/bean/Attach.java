@@ -12,6 +12,16 @@ public class Attach extends BaseBean {
     private String attachSubType;
     private String attachType;
 
+    private Integer permissions; // 0-私有，1-公有，     2-指定用户群拥有（待实现
+
+    public Integer getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Integer permissions) {
+        this.permissions = permissions;
+    }
+
     public String getAttachSubType() {
         return attachSubType;
     }
