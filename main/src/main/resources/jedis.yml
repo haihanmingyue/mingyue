@@ -1,3 +1,4 @@
+#jedis配置文件
 jedis:
   pool:
     host: '192.168.31.193'
